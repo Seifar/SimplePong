@@ -123,32 +123,59 @@ Pong/fast:
 	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/build
 .PHONY : Pong/fast
 
-Pong.o: Pong.cpp.o
+PongLogic.o: PongLogic.cpp.o
 
-.PHONY : Pong.o
+.PHONY : PongLogic.o
 
 # target to build an object file
-Pong.cpp.o:
-	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/Pong.cpp.o
-.PHONY : Pong.cpp.o
+PongLogic.cpp.o:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongLogic.cpp.o
+.PHONY : PongLogic.cpp.o
 
-Pong.i: Pong.cpp.i
+PongLogic.i: PongLogic.cpp.i
 
-.PHONY : Pong.i
+.PHONY : PongLogic.i
 
 # target to preprocess a source file
-Pong.cpp.i:
-	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/Pong.cpp.i
-.PHONY : Pong.cpp.i
+PongLogic.cpp.i:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongLogic.cpp.i
+.PHONY : PongLogic.cpp.i
 
-Pong.s: Pong.cpp.s
+PongLogic.s: PongLogic.cpp.s
 
-.PHONY : Pong.s
+.PHONY : PongLogic.s
 
 # target to generate assembly for a file
-Pong.cpp.s:
-	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/Pong.cpp.s
-.PHONY : Pong.cpp.s
+PongLogic.cpp.s:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongLogic.cpp.s
+.PHONY : PongLogic.cpp.s
+
+PongWindow.o: PongWindow.cpp.o
+
+.PHONY : PongWindow.o
+
+# target to build an object file
+PongWindow.cpp.o:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongWindow.cpp.o
+.PHONY : PongWindow.cpp.o
+
+PongWindow.i: PongWindow.cpp.i
+
+.PHONY : PongWindow.i
+
+# target to preprocess a source file
+PongWindow.cpp.i:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongWindow.cpp.i
+.PHONY : PongWindow.cpp.i
+
+PongWindow.s: PongWindow.cpp.s
+
+.PHONY : PongWindow.s
+
+# target to generate assembly for a file
+PongWindow.cpp.s:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongWindow.cpp.s
+.PHONY : PongWindow.cpp.s
 
 main.o: main.cpp.o
 
@@ -186,9 +213,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Pong"
-	@echo "... Pong.o"
-	@echo "... Pong.i"
-	@echo "... Pong.s"
+	@echo "... PongLogic.o"
+	@echo "... PongLogic.i"
+	@echo "... PongLogic.s"
+	@echo "... PongWindow.o"
+	@echo "... PongWindow.i"
+	@echo "... PongWindow.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
