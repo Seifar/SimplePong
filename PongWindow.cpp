@@ -1,13 +1,17 @@
 //
 // Created by thomas on 09.11.17.
 //
-#include <curses.h>
+#include <ncurses.h>
+#include <stdlib.h>
 #include "PongWindow.h"
 
  PongWindow::PongWindow(unsigned field_size, unsigned paddle_size) {
      this->field_size=field_size;
      this->paddle_size = paddle_size;
      initscr();
+     nodelay(stdscr,true);
+     noecho();
+     scrollok(stdscr,true);
      curs_set(0);
      print_field();
  }
@@ -49,5 +53,10 @@ PongWindow::~PongWindow() {
 }
 
 char PongWindow::getchar() {
-    return getch();
+    char ch = getch();
+    if(ch != ERR){
+        return ch;
+    }else{
+        return -1;
+    }
 }
