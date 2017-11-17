@@ -3,24 +3,25 @@
 //
 
 #include "PongLogic.h"
-#include <stdlib>
-#include <time>
-#include <stdio>
+#include <stdlib.h>
+#include <time.h>
+#include <iostream>
 
 /*
 *   PUBLIC
 */
 
 PongLogic::PongLogic(unsigned field_size_x, unsigned field_size_y, unsigned paddle_size) {
-    std::srand(std::time(0));
-    this->field_size = field_size;
+    srand(time(0));
+    this->field_size_x = field_size_x;
+    this->field_size_y = field_size_y;
     this->paddle_size = paddle_size;
     current_direction = UPRIGHT;
     paddle_pos_left = 0;
     paddle_pos_right = 0;
     ball_Pos_x = field_size_x/2;
-    ball_Pos_y = std::rand() % field_size_y;
-    switch (std::rand()%4) {
+    ball_Pos_y = rand() % field_size_y;
+    switch (rand()%4) {
       case 0:
         current_direction=UPLEFT;
         break;
@@ -53,36 +54,103 @@ void PongLogic::tick(){
         //test if paddle is in right place
         if (paddle_left_is(ball_Pos_y)) {
           if (ball_Pos_y == 0) {
-            ball_Pos_x++;
-            ball_Pos_y++;
+            ball_Pos_x++;  ball_Pos_y++;
             current_direction = DOWNRIGHT;
           }else{
-            ball_Pos_x++;
-            ball_Pos_y--;
+            ball_Pos_x++;  ball_Pos_y--;
             current_direction = UPRIGHT;
           }
         }else{
           //point for right side
           points_right++;
-          reset;
+          reset();
         }
       }else{
         if(ball_Pos_y==0){
-          ball_Pos_y++;
-          ball_Pos_x--;
+          ball_Pos_x--;  ball_Pos_y++;
           current_direction = DOWNLEFT;
         }else{
-          ball_Pos_x--;
-          ball_Pos_y--;
+          ball_Pos_x--;  ball_Pos_y--;
         }
       }
       break;
+
     case UPRIGHT:
+      if (ball_Pos_x == field_size_x-2) {
+        //test if paddle is in right place
+        if (paddle_right_is(ball_Pos_y)) {
+          if (ball_Pos_y == 0) {
+            ball_Pos_x--;  ball_Pos_y++;
+            current_direction = DOWNLEFT;
+          } else {
+            ball_Pos_x--;  ball_Pos_y--;
+            current_direction = UPLEFT;
+          }
+        } else { //paddle right is not
+          points_left++;
+          reset();
+        }
+      } else { //ball is not next to paddle
+        if (ball_Pos_y == 0) {
+          ball_Pos_x++;  ball_Pos_y++;
+          current_direction = DOWNRIGHT;
+        } else {
+          ball_Pos_x++;  ball_Pos_y--;
+        }
+      }
       break;
+
     case DOWNLEFT:
+      if (ball_Pos_x == 1) {
+        //test if paddle is in right place
+        if (paddle_left_is(ball_Pos_y)) {
+          if (ball_Pos_y == 0) {
+            ball_Pos_x++;  ball_Pos_y--;
+            current_direction = UPRIGHT;
+          }else{
+            ball_Pos_x++;  ball_Pos_y++;
+            current_direction = DOWNRIGHT;
+          }
+        }else{
+          //point for right side
+          points_right++;
+          reset();
+        }
+      }else{
+        if(ball_Pos_y == field_size_y-2){
+          ball_Pos_x--;  ball_Pos_y--;
+          current_direction = UPLEFT;
+        }else{
+          ball_Pos_x--;  ball_Pos_y++;
+        }
+      }
       break;
+
     case DOWNRIGHT:
+      if (ball_Pos_x == field_size_x-2) {
+        //test if paddle is in right place
+        if (paddle_right_is(ball_Pos_y)) {
+          if (ball_Pos_y == 0) {
+            ball_Pos_x--;  ball_Pos_y--;
+            current_direction = UPLEFT;
+          } else {
+            ball_Pos_x--;  ball_Pos_y++;
+            current_direction = DOWNLEFT;
+          }
+        } else { //paddle right is not
+          points_left++;
+          reset();
+        }
+      } else { //ball is not next to paddle
+        if (ball_Pos_y == field_size_y-2) {
+          ball_Pos_x++;  ball_Pos_y--;
+          current_direction = UPRIGHT;
+        } else {
+          ball_Pos_x++;  ball_Pos_y++;
+        }
+      }
       break;
+
       default:
        std::cout << "PongLogic Tick Error\n";
     }

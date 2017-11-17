@@ -17,7 +17,7 @@ public:
     void startgame();
 
 private:
-    unsigned field_size, paddle_size;
+    unsigned field_size_x, field_size_y, paddle_size;
     unsigned paddle_pos_left, paddle_pos_right;
     unsigned ball_Pos_x, ball_Pos_y;
     direction current_direction;
