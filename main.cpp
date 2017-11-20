@@ -11,14 +11,14 @@ void test2() {
 }
 
 int main() {
-    PongWindow window(15, 3);
-    while (1){
+    PongWindow window(15, 15, 3);
+    /*while (1){
         char c =window.getchar();
         if(c==27){
             break;
         }
         sleep(.5);
     }
-    window.getchar();
+    window.getchar();*/
     return 0;
 }

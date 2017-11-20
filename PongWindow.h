@@ -1,6 +1,7 @@
 //
 // Created by thomas on 09.11.17.
 //
+#include "PongView.h"
 
 #ifndef PONG_PONGWINDOW_H
 #define PONG_PONGWINDOW_H
@@ -8,15 +9,14 @@
 
 class PongWindow : public PongView{
 public:
-    PongWindow(unsigned field_size_x, unsigned field_size_y, unsigned paddle_size)
-    : PongView(field_size_x, field_size_y, paddle_size);
-    ~PongWindow() : ~PongView();
-    updateView(int left_paddle_pos, int right_paddle_pos,
-      virtual int ball_Pos_x, int ball_Pos_y) = 0; //-1 in argument doesnt update View
+    PongWindow(unsigned field_size_x, unsigned field_size_y, unsigned paddle_size);
+    ~PongWindow();
+    void updateView(int left_paddle_pos, int right_paddle_pos,
+      int ball_Pos_x, int ball_Pos_y); //-1 in argument doesnt update View
 
 private:
-
-
+  unsigned field_size_x, field_size_y;
+  unsigned paddle_size;
     void print_field();
     void print_ball(int x, int y);
     void print_player(bool left, int height);

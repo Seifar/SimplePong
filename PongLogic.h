@@ -2,11 +2,11 @@
 // Created by thomas on 10.11.17.
 //
 #include <vector>
-#using std::vector
 
 #ifndef PONG_PONGLOGIC_H
 #define PONG_PONGLOGIC_H
 
+using std::vector;
 
 class PongLogic {
   //TODO create  view instances
