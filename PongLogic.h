@@ -1,14 +1,15 @@
 //
 // Created by thomas on 10.11.17.
 //
+#include <vector>
+#using std::vector
 
 #ifndef PONG_PONGLOGIC_H
 #define PONG_PONGLOGIC_H
 
 
-
 class PongLogic {
-  //TODO create view instances
+  //TODO create  view instances
 public:
     //initializes the game
     PongLogic(unsigned field_size_x, unsigned field_size_y, unsigned paddle_size);
@@ -17,8 +18,13 @@ public:
     enum direction{UPLEFT, UPRIGHT, DOWNRIGHT, DOWNLEFT};
     void startgame();
 
+    //add views which should update
+
+
     //functions for Actor
+    void move_paddle_left_up();
     void move_paddle_left_down();
+    void move_paddle_right_up();
     void move_paddle_right_down();
 
 private:

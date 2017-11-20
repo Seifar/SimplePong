@@ -5,9 +5,8 @@
 #include <stdlib.h>
 #include "PongWindow.h"
 
- PongWindow::PongWindow(unsigned field_size, unsigned paddle_size) {
-     this->field_size=field_size;
-     this->paddle_size = paddle_size;
+ PongWindow::PongWindow(unsigned field_size, unsigned paddle_size)
+ : PongView(field_size_x, field_size_y, paddle_size){
      initscr();
      nodelay(stdscr,true);
      noecho();
@@ -39,11 +38,19 @@
      refresh();
  }
 
- void PongWindow::print_player(bool left, int height){
+ void PongWindow::print_player(bool left){
     int x=left?1:field_size;
-    for (int i = 0; i < paddle_size; ++i) {
-        move(height+i,x);
-        printw("|");
+    for (int i = 0; i < field_size_y; ++i) {
+        move(i,x);
+        if(i < left?paddle_pos_left:paddle_pos_right || i > (left?paddle_pos_left:paddle_pos_right)+paddle_size ) {
+          if(inch()!='|'){
+            printw("|");
+          }
+        } else {
+          if (inch()!=' ') {
+            printw(" ");
+          }
+        }
     }
     refresh();
  }

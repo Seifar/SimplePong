@@ -25,6 +25,30 @@ PongLogic::~PongLogic() {
 
 }
 
+void move_paddle_left_up() {
+  if (paddle_pos_left > 0) {
+    paddle_pos_left--;
+  }
+}
+
+void move_paddle_left_down() {
+  if (field_size_y > paddle_pos_left+paddle_size) {
+    paddle_pos_left++;
+  }
+}
+
+void move_paddle_right_up(/* arguments */) {
+  if (paddle_pos_right>0) {
+    paddle_pos_right--;
+  }
+}
+
+void move_paddle_right_down() {
+  if(field_size_y > paddle_pos_right+paddle_size){
+    paddle_pos_right++;
+  }
+}
+
 /*
 *   PRIVATE
 */
