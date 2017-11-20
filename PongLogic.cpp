@@ -16,27 +16,9 @@ PongLogic::PongLogic(unsigned field_size_x, unsigned field_size_y, unsigned padd
     this->field_size_x = field_size_x;
     this->field_size_y = field_size_y;
     this->paddle_size = paddle_size;
-    current_direction = UPRIGHT;
     paddle_pos_left = 0;
     paddle_pos_right = 0;
-    ball_Pos_x = field_size_x/2;
-    ball_Pos_y = rand() % field_size_y;
-    switch (rand()%4) {
-      case 0:
-        current_direction=UPLEFT;
-        break;
-      case 1:
-        current_direction = UPRIGHT;
-        break;
-      case 2:
-        current_direction = DOWNRIGHT;
-        break;
-      case 3:
-        current_direction = DOWNLEFT;
-        break;
-      default:
-        std::cout << "Pong Logic Constructor Error\n";
-    }
+    reset();
 }
 
 PongLogic::~PongLogic() {
@@ -46,7 +28,6 @@ PongLogic::~PongLogic() {
 /*
 *   PRIVATE
 */
-//TODO better way: use function pointer instead of enum
 void PongLogic::tick(){
     switch (current_direction) {
     case UPLEFT:
@@ -154,4 +135,33 @@ void PongLogic::tick(){
       default:
        std::cout << "PongLogic Tick Error\n";
     }
+}
+
+void PongLogic::reset() {
+  ball_Pos_x = field_size_x/2;
+  ball_Pos_y = rand() % field_size_y;
+  switch (rand()%4) {
+    case 0:
+      current_direction=UPLEFT;
+      break;
+    case 1:
+      current_direction = UPRIGHT;
+      break;
+    case 2:
+      current_direction = DOWNRIGHT;
+      break;
+    case 3:
+      current_direction = DOWNLEFT;
+      break;
+    default:
+      std::cout << "Pong Logic Reset Error\n";
+  }
+}
+
+bool PongLogic::paddle_left_is(int y) {
+  return y>=paddle_pos_left && y<=paddle_pos_left+paddle_size;
+}
+
+bool PongLogic::paddle_right_is(int y) {
+  return y>=paddle_pos_right && y<=paddle_pos_right+paddle_size;
 }

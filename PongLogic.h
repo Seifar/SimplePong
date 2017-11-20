@@ -8,6 +8,7 @@
 
 
 class PongLogic {
+  //TODO create view instances
 public:
     //initializes the game
     PongLogic(unsigned field_size_x, unsigned field_size_y, unsigned paddle_size);
@@ -15,6 +16,10 @@ public:
 
     enum direction{UPLEFT, UPRIGHT, DOWNRIGHT, DOWNLEFT};
     void startgame();
+
+    //functions for Actor
+    void move_paddle_left_down();
+    void move_paddle_right_down();
 
 private:
     unsigned field_size_x, field_size_y, paddle_size;
