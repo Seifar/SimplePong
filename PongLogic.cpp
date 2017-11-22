@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
+#include <chrono>
+
+using namespace std::chrono;
 
 /*
 *   PUBLIC
@@ -18,6 +21,8 @@ PongLogic::PongLogic(unsigned field_size_x, unsigned field_size_y, unsigned padd
     this->paddle_size = paddle_size;
     paddle_pos_left = 0;
     paddle_pos_right = 0;
+    input_buffer_left=0;
+    input_buffer_right=0;
     reset();
 }
 
@@ -25,33 +30,87 @@ PongLogic::~PongLogic() {
 
 }
 
-void PongLogic::move_paddle_left_up() {
-  if (paddle_pos_left > 0) {
-    paddle_pos_left--;
+void PongLogic::startgame() {
+  update_views();
+  t = new std::thread(&PongLogic::startgame_helper, this);
+}
+
+void PongLogic::startgame_helper(){
+  timer =  (long) std::chrono::high_resolution_clock::now().time_since_epoch().count();
+  while (1) {
+    long current_time = ((long) std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    if(current_time - timer > 1000/fps){
+      //do tick
+      timer = current_time;
+      tick();
+      while (1) {
+        /* code */
+      }
+    }
   }
+}
+
+void PongLogic::add_view(PongView* view){
+  views.push_back(view);
+}
+
+void PongLogic::move_paddle_left_up() {
+  input_buffer_left--;
 }
 
 void PongLogic::move_paddle_left_down() {
-  if (field_size_y > paddle_pos_left+paddle_size) {
-    paddle_pos_left++;
-  }
+  input_buffer_left++;
 }
 
-void PongLogic::move_paddle_right_up(/* arguments */) {
-  if (paddle_pos_right>0) {
-    paddle_pos_right--;
-  }
+void PongLogic::move_paddle_right_up() {
+  input_buffer_right--;
 }
 
 void PongLogic::move_paddle_right_down() {
-  if(field_size_y > paddle_pos_right+paddle_size){
-    paddle_pos_right++;
-  }
+  input_buffer_right++;
 }
 
 /*
 *   PRIVATE
 */
+void PongLogic::update_paddle_left() {
+    int tmp_buf;
+
+    //copy and empty input buffer
+    input_buffer_lock.lock();
+    tmp_buf = input_buffer_left;
+    input_buffer_left = 0;
+    input_buffer_lock.unlock();
+
+    //update logic -- paddle is moved by input_buffer_left as far as possible
+    if (paddle_pos_left + tmp_buf < 0) {
+      paddle_pos_left = 0;
+    }else if(paddle_pos_left + tmp_buf > field_size_y-1){
+      paddle_pos_left = field_size_y-1;
+    }else{
+      paddle_pos_left = paddle_pos_left + tmp_buf;
+    }
+}
+
+void PongLogic::update_paddle_right() {
+    int tmp_buf;
+
+    //copy and empty input buffer
+    input_buffer_lock.lock();
+    tmp_buf = input_buffer_right;
+    input_buffer_right = 0;
+    input_buffer_lock.unlock();
+
+    //update logic -- paddle is moved by input_buffer_left as far as possible
+    if (paddle_pos_right + tmp_buf < 0) {
+      paddle_pos_right = 0;
+    }else if(paddle_pos_right + tmp_buf > field_size_y-1){
+      paddle_pos_right = field_size_y-1;
+    }else{
+      paddle_pos_right = paddle_pos_right + tmp_buf;
+    }
+}
+
 void PongLogic::tick(){
     switch (current_direction) {
     case UPLEFT:
@@ -159,6 +218,8 @@ void PongLogic::tick(){
       default:
        std::cout << "PongLogic Tick Error\n";
     }
+
+    update_views();
 }
 
 void PongLogic::reset() {
@@ -179,6 +240,12 @@ void PongLogic::reset() {
       break;
     default:
       std::cout << "Pong Logic Reset Error\n";
+  }
+}
+
+void PongLogic::update_views() {
+  for (std::vector<int>::size_type i = 0; i < views.size(); i++) {
+    views[i]->updateView(paddle_pos_left, paddle_pos_right, ball_Pos_x, ball_Pos_y);
   }
 }
 

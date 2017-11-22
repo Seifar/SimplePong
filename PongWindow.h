@@ -15,8 +15,6 @@ public:
       int ball_Pos_x, int ball_Pos_y); //-1 in argument doesnt update View
 
 private:
-  unsigned field_size_x, field_size_y;
-  unsigned paddle_size;
     void print_field();
     void print_ball(int x, int y);
     void print_player(bool left, int height);

@@ -3,6 +3,7 @@
 //
 #include <ncurses.h>
 #include <stdlib.h>
+#include <string>
 #include "PongWindow.h"
 #include "PongView.h"
 
@@ -14,31 +15,42 @@
      scrollok(stdscr,true);
      curs_set(0);
      print_field();
+     print_player(true, 5);
+     refresh();
  }
+
+PongWindow::~PongWindow(){
+    endwin();
+}
 
  void PongWindow::updateView(int left_paddle_pos, int right_paddle_pos,
    int ball_Pos_x, int ball_Pos_y){ //-1 in argument doesnt update View
      if(left_paddle_pos >= 0)
       print_player(1, left_paddle_pos);
      if(right_paddle_pos >=0)
-      print_player(2, right_paddle_pos);
+      print_player(0, right_paddle_pos);
+    while (1) {
+      /* code */
+    }
     if(ball_Pos_x >= 0 && ball_Pos_y >=0)
       print_ball(ball_Pos_x, ball_Pos_y);
+
+    refresh();
    }
 
  void PongWindow::print_field(){
     move(0,0);
-    for (int i = 0; i < field_size_x+2; ++i) {
+    for (int i = 0; i < field_size_x+1; ++i) {
         printw("# ");
     }
     for (int i = 1; i <= field_size_y; ++i) {
         move(i,0);
         printw("#");
-        move(i,(field_size_x*2)+3);
+        move(i,(field_size_x*2)+1);
         printw("#");
     }
     move(field_size_y+1,0);
-    for (int i = 0; i < field_size_y+2; ++i) {
+    for (int i = 0; i < field_size_x+1; ++i) {
         printw(" #");
     }
      refresh();
@@ -46,9 +58,10 @@
 
  void PongWindow::print_ball(int x, int y){
     //clear screen
-    for (unsigned y = 1; y < field_size_y-2; y++) {
-      move(y, 2);
-      for (unsigned x = 2; x < field_size_x-3; x++) {
+    for (unsigned y = 0; y < field_size_y; y++) {
+      move(y+1, 3);
+      //ignore space for paddles
+      for (unsigned x = 1; x < field_size_x-1; x++) {
         printw("  ");
       }
     }
@@ -59,25 +72,18 @@
  }
 
  void PongWindow::print_player(bool left, int height){
-    int x=left?1:field_size_x-2;
-    for (int i = 0; i < field_size_y; ++i) {
-        move(i,x);
-        if(i < height || i > height ) {
-          if(inch()!='|'){
-            printw("|");
-          }
+    //TODO
+    int x=left?1:1+(field_size_x*2)-2;
+    for (int i = 0; i < field_size_y; i++) {
+        move(i+1,x);
+        if(i > height-(paddle_size/2-1) && i < height+(paddle_size/2-1) ) {
+          printw("||");
         } else {
-          if (inch()!=' ') {
-            printw(" ");
-          }
+          printw("--");
         }
     }
     refresh();
  }
-
-PongWindow::~PongWindow(){
-    endwin();
-}
 
 char PongWindow::getchar() {
     char ch = getch();
