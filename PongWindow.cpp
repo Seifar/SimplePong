@@ -29,9 +29,6 @@ PongWindow::~PongWindow(){
       print_player(1, left_paddle_pos);
      if(right_paddle_pos >=0)
       print_player(0, right_paddle_pos);
-    while (1) {
-      /* code */
-    }
     if(ball_Pos_x >= 0 && ball_Pos_y >=0)
       print_ball(ball_Pos_x, ball_Pos_y);
 
@@ -76,10 +73,10 @@ PongWindow::~PongWindow(){
     int x=left?1:1+(field_size_x*2)-2;
     for (int i = 0; i < field_size_y; i++) {
         move(i+1,x);
-        if(i > height-(paddle_size/2-1) && i < height+(paddle_size/2-1) ) {
+        if(i >= height && i < height+paddle_size ) {
           printw("||");
         } else {
-          printw("--");
+          printw("  ");
         }
     }
     refresh();

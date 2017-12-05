@@ -19,8 +19,8 @@ PongLogic::PongLogic(unsigned field_size_x, unsigned field_size_y, unsigned padd
     this->field_size_x = field_size_x;
     this->field_size_y = field_size_y;
     this->paddle_size = paddle_size;
-    paddle_pos_left = 0;
-    paddle_pos_right = 0;
+    paddle_pos_left = field_size_y/2-paddle_size/2;
+    paddle_pos_right = field_size_y/2-paddle_size/2;
     input_buffer_left=0;
     input_buffer_right=0;
     reset();
@@ -31,24 +31,17 @@ PongLogic::~PongLogic() {
 }
 
 void PongLogic::startgame() {
-  update_views();
-  t = new std::thread(&PongLogic::startgame_helper, this);
+    timer =  (long) std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    while (1) {
+        long current_time = ((long) std::chrono::high_resolution_clock::now().time_since_epoch().count());
+        if(current_time - timer > 1000000000/fps){
+            //do tick
+            timer = current_time;
+            tick();
+        }
+    }
 }
 
-void PongLogic::startgame_helper(){
-  timer =  (long) std::chrono::high_resolution_clock::now().time_since_epoch().count();
-  while (1) {
-    long current_time = ((long) std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    if(current_time - timer > 1000/fps){
-      //do tick
-      timer = current_time;
-      tick();
-      while (1) {
-        /* code */
-      }
-    }
-  }
-}
 
 void PongLogic::add_view(PongView* view){
   views.push_back(view);
@@ -168,7 +161,7 @@ void PongLogic::tick(){
       if (ball_Pos_x == 1) {
         //test if paddle is in right place
         if (paddle_left_is(ball_Pos_y)) {
-          if (ball_Pos_y == 0) {
+          if (ball_Pos_y == field_size_y-1) {
             ball_Pos_x++;  ball_Pos_y--;
             current_direction = UPRIGHT;
           }else{
@@ -181,7 +174,7 @@ void PongLogic::tick(){
           reset();
         }
       }else{
-        if(ball_Pos_y == field_size_y-2){
+        if(ball_Pos_y == field_size_y-1){
           ball_Pos_x--;  ball_Pos_y--;
           current_direction = UPLEFT;
         }else{
@@ -194,7 +187,7 @@ void PongLogic::tick(){
       if (ball_Pos_x == field_size_x-2) {
         //test if paddle is in right place
         if (paddle_right_is(ball_Pos_y)) {
-          if (ball_Pos_y == 0) {
+          if (ball_Pos_y == field_size_y-1) {
             ball_Pos_x--;  ball_Pos_y--;
             current_direction = UPLEFT;
           } else {
@@ -206,7 +199,7 @@ void PongLogic::tick(){
           reset();
         }
       } else { //ball is not next to paddle
-        if (ball_Pos_y == field_size_y-2) {
+        if (ball_Pos_y == field_size_y-1) {
           ball_Pos_x++;  ball_Pos_y--;
           current_direction = UPRIGHT;
         } else {
@@ -239,7 +232,7 @@ void PongLogic::reset() {
       current_direction = DOWNLEFT;
       break;
     default:
-      std::cout << "Pong Logic Reset Error\n";
+      std::cout << "Pong Logic Reset Error\n"; exit(-1);
   }
 }
 

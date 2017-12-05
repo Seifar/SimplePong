@@ -13,8 +13,5 @@ int main() {
     logic.startgame();
     /*PongController left;
     PongController right;*/
-    while (1) {
-      /* just keep window open */
-    }
     return 0;
 }

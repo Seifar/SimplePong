@@ -48,10 +48,10 @@ RM = /opt/clion-2017.2.3/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/thomas/CLionProjects/Pong
+CMAKE_SOURCE_DIR = /home/thomas/CLionProjects/SimplePong
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/thomas/CLionProjects/Pong/cmake-build-debug
+CMAKE_BINARY_DIR = /home/thomas/CLionProjects/SimplePong/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/thomas/CLionProjects/Pong/cmake-build-debug/CMakeFiles /home/thomas/CLionProjects/Pong/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/thomas/CLionProjects/SimplePong/cmake-build-debug/CMakeFiles /home/thomas/CLionProjects/SimplePong/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/thomas/CLionProjects/Pong/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/thomas/CLionProjects/SimplePong/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -122,6 +122,33 @@ Pong: cmake_check_build_system
 Pong/fast:
 	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/build
 .PHONY : Pong/fast
+
+PongController.o: PongController.cpp.o
+
+.PHONY : PongController.o
+
+# target to build an object file
+PongController.cpp.o:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongController.cpp.o
+.PHONY : PongController.cpp.o
+
+PongController.i: PongController.cpp.i
+
+.PHONY : PongController.i
+
+# target to preprocess a source file
+PongController.cpp.i:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongController.cpp.i
+.PHONY : PongController.cpp.i
+
+PongController.s: PongController.cpp.s
+
+.PHONY : PongController.s
+
+# target to generate assembly for a file
+PongController.cpp.s:
+	$(MAKE) -f CMakeFiles/Pong.dir/build.make CMakeFiles/Pong.dir/PongController.cpp.s
+.PHONY : PongController.cpp.s
 
 PongLogic.o: PongLogic.cpp.o
 
@@ -213,6 +240,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Pong"
+	@echo "... PongController.o"
+	@echo "... PongController.i"
+	@echo "... PongController.s"
 	@echo "... PongLogic.o"
 	@echo "... PongLogic.i"
 	@echo "... PongLogic.s"
