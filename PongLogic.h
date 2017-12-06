@@ -20,23 +20,16 @@ public:
     ~PongLogic();
 
     enum direction{UPLEFT, UPRIGHT, DOWNRIGHT, DOWNLEFT};
-    void startgame();
+    void start_game();
 
     //add views which should get updated
     void add_view(PongView* view);
 
-    //functions to be called from Actor
-    void move_paddle_left_up();
-    void move_paddle_left_down();
-    void move_paddle_right_up();
-    void move_paddle_right_down();
-
 private:
-    void startgame_helper();
     long timer;
 
     unsigned field_size_x, field_size_y, paddle_size;
-    unsigned paddle_pos_left, paddle_pos_right;
+    int paddle_pos_left, paddle_pos_right;
     unsigned ball_Pos_x, ball_Pos_y;
     direction current_direction;
     unsigned points_left, points_right;
