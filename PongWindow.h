@@ -14,7 +14,7 @@ public:
     PongWindow(unsigned field_size_x, unsigned field_size_y, unsigned paddle_size);
     ~PongWindow();
     void updateView(int left_paddle_pos, int right_paddle_pos,
-      int ball_Pos_x, int ball_Pos_y, int score_left, int score_right); //-1 in argument doesnt update View
+      int ball_Pos_x, int ball_Pos_y, int score_left, int score_right) override; //-1 in argument doesnt update View
     int get_height_update_r() override;
     int get_height_update_l() override;
 private:

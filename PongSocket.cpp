@@ -10,7 +10,7 @@
 PongSocket::PongSocket(unsigned int field_size_x, unsigned int field_size_y, unsigned int paddle_size)
         : PongView(field_size_x, field_size_y, paddle_size) {
 
-    if (!setup_server())
+    if (!setup_sensor_server())
         exit(-1);
 
 
@@ -18,6 +18,9 @@ PongSocket::PongSocket(unsigned int field_size_x, unsigned int field_size_y, uns
 
 }
 
+PongSocket::~PongSocket() {
+    stop_sensor_server();
+}
 
 
 int PongSocket::get_height_update_r() {
@@ -42,26 +45,26 @@ int PongSocket::setup_sensor_server() {
         return(-1);
     }
 
-    bzero((char *) &serv_addr, sizeof(serv_addr));
-    portno = PORT;
-    serv_addr.sin6_flowinfo = 0;
-    serv_addr.sin6_family = AF_INET6;
-    serv_addr.sin6_addr = in6addr_any;
-    serv_addr.sin6_port = htons(portno);
+    bzero((char *) &serv_addr_sensor, sizeof(serv_addr_sensor));
+    portno_sensor = PORT_SERVER;
+    serv_addr_sensor.sin6_flowinfo = 0;
+    serv_addr_sensor.sin6_family = AF_INET6;
+    serv_addr_sensor.sin6_addr = in6addr_any;
+    serv_addr_sensor.sin6_port = htons(portno_sensor);
 
     //Sockets Layer Call: bind()
-    if (bind(sockfd_sensor, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+    if (bind(sockfd_sensor, (struct sockaddr *) &serv_addr_sensor, sizeof(serv_addr_sensor)) < 0) {
         printf("ERROR on binding");
         return 0;
     }
 
     //Sockets Layer Call: listen()
     listen(sockfd_sensor, 5);
-    clilen = sizeof(cli_addr);
+    clilen_sensor = sizeof(cli_addr_sensor);
 
     //Sockets Layer Call: accept()
     int tmp = sockfd_sensor;
-    sockfd_sensor = accept(sockfd_sensor, (struct sockaddr *) &cli_addr, &clilen);
+    sockfd_sensor = accept(sockfd_sensor, (struct sockaddr *) &cli_addr_sensor, &clilen_sensor);
     close(tmp);
     if (sockfd_sensor < 0){
         printf("ERROR on accept");
@@ -69,17 +72,29 @@ int PongSocket::setup_sensor_server() {
     }
 
     //Sockets Layer Call: inet_ntop()
-    inet_ntop(AF_INET6, &(cli_addr.sin6_addr),client_addr_ipv6, 100);
-    printf("Incoming connection from client having IPv6 address: %s\n",client_addr_ipv6);
+    inet_ntop(AF_INET6, &(cli_addr_sensor.sin6_addr),client_addr_ipv6_sensor, 100);
+    printf("Incoming connection from client having IPv6 address: %s\n",client_addr_ipv6_sensor);
 
-    memset(buffer,0, 256);
+    memset(buffer_sensor,0, 256);
 
     //send how many input neurons are needed
+        //ballposx ballposy ownpaddlepos
+    int no_input_neurons = 3;
+    if (0 > send(sockfd_sensor, &no_input_neurons, sizeof(no_input_neurons), 0)){
+        return -1;
+    }
 
+    return 0;
 }
 
 int PongSocket::stop_sensor_server(){
-    close(sockfd_sensor);
+    return close(sockfd_sensor);
 }
 
+int PongSocket::setup_motor_client() {
+    return 0;
+}
 
+int PongSocket::stop_motor_client() {
+    return close(sockfd_motor);
+}
