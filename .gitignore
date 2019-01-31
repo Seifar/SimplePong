@@ -1,7 +1,2 @@
 .idea/
-cmake-build-debug/CMakeCache.txt
-cmake-build-debug/CMakeFiles/
-cmake-build-debug/Pong
-cmake-build-debug/Pong.cbp
-cmake-build-debug/cmake_install.cmake
-
+cmake-build-debug/
