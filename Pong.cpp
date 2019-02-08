@@ -2,11 +2,10 @@
 // Created by Thomas Frank on 2019-01-31.
 //
 
-#include "PongControl.h"
-
+#include "Pong.h"
 #include "cmath"
 
-PongControl::PongControl() {
+Pong::Pong() {
     fieldSize = {750, 500};
 
     paddleSize = fieldSize.second / 6;
@@ -21,67 +20,68 @@ PongControl::PongControl() {
 
 }
 
-PongControl::~PongControl() {
+Pong::~Pong() {
 
 }
 
-void PongControl::normalizeSpeed() {
+void Pong::normalizeSpeed() {
     double v = ballSpeedMultiplyer * sqrt( pow(ballSpeed.first, 2) + pow(ballSpeed.second, 2) );
     ballSpeed.first /= v;
     ballSpeed.second /= v;
 }
 
-void PongControl::upPressedPlayer1(){
+void Pong::upPressedPlayer1(){
     auto timePoint = std::chrono::high_resolution_clock::now();
     lockQ1.lock();
     auto new_elem = std::pair<event , std::chrono::time_point<std::chrono::high_resolution_clock>>(upPressed, timePoint);
     eventQueueP1.push(new_elem);
     lockQ1.unlock();
 }
-void PongControl::upReleasedPlayer1(){
+void Pong::upReleasedPlayer1(){
     auto timePoint = std::chrono::high_resolution_clock::now();
     lockQ1.lock();
     auto new_elem = std::pair<event , std::chrono::time_point<std::chrono::high_resolution_clock>>(upReleased, timePoint);
     eventQueueP1.push(new_elem);
     lockQ1.unlock();
 }
-void PongControl::downPressedPlayer1(){
+void Pong::downPressedPlayer1(){
     auto timePoint = std::chrono::high_resolution_clock::now();
     lockQ1.lock();
     auto new_elem = std::pair<event , std::chrono::time_point<std::chrono::high_resolution_clock>>(downPressed, timePoint);
     eventQueueP1.push(new_elem);
     lockQ1.unlock();
 }
-void PongControl::downReleasedPlayer1(){
+void Pong::downReleasedPlayer1(){
     auto timePoint = std::chrono::high_resolution_clock::now();
     lockQ1.lock();
     auto new_elem = std::pair<event , std::chrono::time_point<std::chrono::high_resolution_clock>>(downReleased, timePoint);
     eventQueueP1.push(new_elem);
     lockQ1.unlock();
 }
-void PongControl::upPressedPlayer2(){
+void Pong::upPressedPlayer2(){
     auto timePoint = std::chrono::high_resolution_clock::now();
     lockQ2.lock();
     auto new_elem = std::pair<event , std::chrono::time_point<std::chrono::high_resolution_clock>>(upPressed, timePoint);
     eventQueueP1.push(new_elem);
     lockQ2.unlock();
 }
-void PongControl::upReleasedPlayer2(){auto timePoint = std::chrono::high_resolution_clock::now();
+void Pong::upReleasedPlayer2(){auto timePoint = std::chrono::high_resolution_clock::now();
     lockQ2.lock();
     auto new_elem = std::pair<event , std::chrono::time_point<std::chrono::high_resolution_clock>>(upReleased, timePoint);
     eventQueueP1.push(new_elem);
     lockQ2.unlock();}
-void PongControl::downPressedPlayer2(){
+void Pong::downPressedPlayer2(){
     auto timePoint = std::chrono::high_resolution_clock::now();
     lockQ2.lock();
     auto new_elem = std::pair<event , std::chrono::time_point<std::chrono::high_resolution_clock>>(downPressed, timePoint);
     eventQueueP1.push(new_elem);
     lockQ2.unlock();
 }
-void PongControl::downReleasedPlayer2(){
+void Pong::downReleasedPlayer2(){
     auto timePoint = std::chrono::high_resolution_clock::now();
     lockQ2.lock();
     auto new_elem = std::pair<event , std::chrono::time_point<std::chrono::high_resolution_clock>>(downReleased, timePoint);
     eventQueueP1.push(new_elem);
     lockQ2.unlock();
+    char** a;
 }

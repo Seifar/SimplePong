@@ -11,7 +11,7 @@
 #include <chrono>
 #include <mutex>
 
-class PongControl {
+class Pong {
 private:
     enum event{
         upPressed,
@@ -35,8 +35,8 @@ private:
     void normalizeSpeed();
 
 public:
-    PongControl();
-    ~PongControl();
+    Pong();
+    ~Pong();
 
     void upPressedPlayer1();
     void upReleasedPlayer1();

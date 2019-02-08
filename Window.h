@@ -5,9 +5,14 @@
 #ifndef PONG_WINDOW_H
 #define PONG_WINDOW_H
 
+#include <SDL/SDL.h>
 
 class Window {
+private:
 
+public:
+    Window();
+    ~Window();
 };
 
 
