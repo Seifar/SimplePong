@@ -19,11 +19,14 @@ private:
     std::pair<int, int> FieldOffset;
 
     void loop();
+
     void draw();
+
     void calculateStuff();
 
 public:
-    Window(Pong *modell);
+    explicit Window(Pong *modell);
+
     ~Window();
 };
 
