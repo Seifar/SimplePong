@@ -20,7 +20,7 @@ Pong::Pong() {
     ballSpeed = {1, 1};
     normalizeSpeed();
 
-    positionP1 = positionP2 = (fieldSize.second - paddleSize)  / 1.; //half position
+    positionP1 = positionP2 = (fieldSize.second - paddleSize)  / 2.; //half position
 
     directionP1 = directionP2 = 0;
 
