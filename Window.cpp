@@ -13,7 +13,7 @@ Window::Window(Pong *modell) {
     //create window
     window.create(sf::VideoMode(800, 600), "Pong");
     window.setVerticalSyncEnabled(true);
-    //window.setFramerateLimit(60);
+    window.setFramerateLimit(60);
 
     //draw field and start loop
     calculateStuff();
@@ -29,7 +29,7 @@ void Window::loop() {
     while (window.isOpen()) {
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
-        while (window.waitEvent(event)) {
+        while (window.pollEvent(event)) {
             switch (event.type) {
                 case sf::Event::KeyPressed:
                     // enque event in Pong physics
@@ -84,8 +84,8 @@ void Window::loop() {
                     break;
             }
 
-            draw();
         }
+        draw();
     }
 }
 

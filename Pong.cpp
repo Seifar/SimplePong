@@ -16,26 +16,26 @@ Pong::Pong() {
     ballPos = {fieldSize.first / 2, fieldSize.second / 2};
     ballDiameter = 15;
 
-    ballSpeedMultiplier = 1./100;
+    ballSpeedMultiplier = 1. / 2000000;
     ballSpeed = {1, 1};
     normalizeSpeed();
 
-    positionP1 = positionP2 = (fieldSize.second - paddleSize)  / 2.; //half position
+    positionP1 = positionP2 = (fieldSize.second - paddleSize) / 2.; //half position
 
     directionP1 = directionP2 = 0;
 
-    paddlespeed = 1;
+    paddlespeed = 1. / 400000;
 
-    lastTickRight = lastTickLeft = lastTickLeft = std::chrono::high_resolution_clock::now();
+    lastTickRight = lastTickLeft = lastTickBall = std::chrono::high_resolution_clock::now();
 
 }
 
 Pong::~Pong() = default;
 
 void Pong::normalizeSpeed() {
-    double v = ballSpeedMultiplier * sqrt(pow(ballSpeed.first, 2) + pow(ballSpeed.second, 2));
-    ballSpeed.first /= v;
-    ballSpeed.second /= v;
+    double v = sqrt(pow(ballSpeed.first, 2) + pow(ballSpeed.second, 2));
+    ballSpeed.first = ballSpeedMultiplier * ballSpeed.first / v;
+    ballSpeed.second = ballSpeedMultiplier * ballSpeed.second / v;
 }
 
 void Pong::upPressedPlayer1() {
@@ -115,9 +115,43 @@ void Pong::tick() {
 
     //move ball
     auto now = std::chrono::high_resolution_clock::now();
-
     int duration = (int) (now - lastTickBall).count();
 
+    double newBallPos;
+    //x-axis movement
+    newBallPos = ballPos.first + ballSpeed.first * duration;
+    if (newBallPos - ballDiameter / 2. < 0) {
+        // position during overlap
+
+        if (ballPos.second > positionP1 && ballPos.second < positionP1 + paddleSize) {
+            newBallPos = (newBallPos - ballDiameter / 2.) * -1 + ballDiameter / 2.;
+            ballSpeed.first *= -1;
+        } else {
+            ballPos = {fieldSize.first / 2, fieldSize.second / 2};
+            return;
+        }
+    } else if (newBallPos + ballDiameter / 2. > fieldSize.first) {
+        //position during overlap
+        if (ballPos.second > positionP2 && ballPos.second < positionP2 + paddleSize) {
+            newBallPos -= 2 * (newBallPos + ballDiameter / 2. - fieldSize.first);
+            ballSpeed.first *= -1;
+        } else {
+            ballPos = {fieldSize.first / 2, fieldSize.second / 2};
+            return;
+        }
+    }
+    ballPos.first = newBallPos;
+
+    //y-axis movement
+    newBallPos = ballPos.second + ballSpeed.second * duration;
+    if (newBallPos - ballDiameter / 2. < 0) {
+        newBallPos = (newBallPos - ballDiameter / 2.) * -1 + ballDiameter / 2.;
+        ballSpeed.second *= -1;
+    } else if (newBallPos + ballDiameter / 2. > fieldSize.second) {
+        newBallPos -= 2 * (newBallPos + ballDiameter / 2. - fieldSize.second);
+        ballSpeed.second *= -1;
+    }
+    ballPos.second = newBallPos;
 
     lastTickBall = now;
 }
