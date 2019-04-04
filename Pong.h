@@ -15,6 +15,8 @@
 #include <iostream>
 #include <thread>
 
+typedef std::chrono::time_point<std::chrono::high_resolution_clock> TimePoint;
+
 class Pong {
 private:
     enum event {
@@ -32,7 +34,7 @@ private:
     double positionP1, positionP2;
     int directionP1, directionP2; // ϵ {-1, 0, 1}
     double paddlespeed;
-    std::chrono::time_point<std::chrono::high_resolution_clock> lastTickBall;
+    TimePoint lastTickBall;
 
     bool terminated = false;
 
@@ -40,7 +42,7 @@ private:
     // input queues
     std::queue<std::pair<event, std::chrono::time_point<std::chrono::high_resolution_clock>>> eventQueueP1, eventQueueP2;
     std::mutex lockQ1, lockQ2;
-    std::chrono::time_point<std::chrono::high_resolution_clock> lastTickLeft, lastTickRight;
+    TimePoint lastTickLeft, lastTickRight;
 
     //methods
     void normalizeSpeed();
@@ -48,7 +50,7 @@ private:
     void
     emptyQueue(std::queue<std::pair<event, std::chrono::time_point<std::chrono::high_resolution_clock>>> &eventQueue,
                std::mutex &lock,
-               double &position, std::chrono::time_point<std::chrono::high_resolution_clock> &lastTick);
+               double &position, TimePoint &lastTick, int &direction);
 
 public:
     Pong();

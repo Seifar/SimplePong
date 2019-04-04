@@ -16,7 +16,7 @@ Pong::Pong() {
     ballPos = {fieldSize.first / 2, fieldSize.second / 2};
     ballDiameter = 15;
 
-    ballSpeedMultiplier = 1. / 2000000;
+    ballSpeedMultiplier = 5e-7;
     ballSpeed = {1, 1};
     normalizeSpeed();
 
@@ -24,7 +24,7 @@ Pong::Pong() {
 
     directionP1 = directionP2 = 0;
 
-    paddlespeed = 1. / 400000;
+    paddlespeed = 5e-7;
 
     lastTickRight = lastTickLeft = lastTickBall = std::chrono::high_resolution_clock::now();
 
@@ -110,8 +110,8 @@ void Pong::downReleasedPlayer2() {
 }
 
 void Pong::tick() {
-    emptyQueue(eventQueueP1, lockQ1, positionP1, lastTickLeft);
-    emptyQueue(eventQueueP2, lockQ2, positionP2, lastTickRight);
+    emptyQueue(eventQueueP1, lockQ1, positionP1, lastTickLeft, directionP1);
+    emptyQueue(eventQueueP2, lockQ2, positionP2, lastTickRight, directionP2);
 
     //move ball
     auto now = std::chrono::high_resolution_clock::now();
@@ -159,28 +159,41 @@ void Pong::tick() {
 void
 Pong::emptyQueue(std::queue<std::pair<event, std::chrono::time_point<std::chrono::high_resolution_clock>>> &eventQueue,
                  std::mutex &lock,
-                 double &position, std::chrono::time_point<std::chrono::high_resolution_clock> &lastTick) {
-    auto leftLast = lastTick;
+                 double &position, TimePoint &lastTick, int &direction) {
     lock.lock();
+    bool updated = false;
+
     while (!eventQueue.empty()) {
+        auto currentTick = std::chrono::high_resolution_clock::now();
+        auto timeDistance = currentTick - lastTick;
+        position -= paddlespeed * timeDistance.count() * direction;
         switch (eventQueue.front().first) {
             case upPressed:
-                position -= 10;
-                break;
-            case upReleased:
-
+                direction = 1;
                 break;
             case downPressed:
-                position += 10;
+                direction = -1;
                 break;
+            case upReleased:
             case downReleased:
-
+                direction = 0;
                 break;
         }
 
         position = std::max(position, 0.);
         position = std::min(position, fieldSize.second - paddleSize + .0);
         eventQueue.pop();
+        lastTick = currentTick;
+        updated = true;
+    }
+
+    if (!updated){
+        auto currentTick = std::chrono::high_resolution_clock::now();
+        auto timeDistance = currentTick - lastTick;
+        position -= paddlespeed * timeDistance.count() * direction;
+        position = std::max(position, 0.);
+        position = std::min(position, fieldSize.second - paddleSize + .0);
+        lastTick = currentTick;
     }
     lock.unlock();
 }
