@@ -3,8 +3,9 @@ project(Pong)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp Pong.cpp Pong.h Window.cpp Window.h)
+set(SOURCE_FILES main.cpp Pong.cpp Pong.h Window.cpp Window.h SocketWindow.cpp SocketWindow.h)
 add_executable(Pong ${SOURCE_FILES})
+add_executable(TestServer TestServer.cpp TestServer.h)
 
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})

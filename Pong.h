@@ -33,8 +33,9 @@ private:
     double ballSpeedMultiplier;
     double positionP1, positionP2;
     int directionP1, directionP2; // ϵ {-1, 0, 1}
-    double paddlespeed;
+    double paddleSpeed;
     TimePoint lastTickBall;
+    bool leftPressed, rightPressed;
 
     bool terminated = false;
 
@@ -52,14 +53,17 @@ private:
                std::mutex &lock,
                double &position, TimePoint &lastTick, int &direction);
 
+    void tick();
+
+    void score(bool left);
+
+
 public:
     Pong();
 
     ~Pong();
 
-    void tick();
-
-    void loop() { while (!terminated) tick(); }
+    void loop();
 
     void terminate() { terminated = true; }
 

@@ -8,13 +8,17 @@
 #include <algorithm>
 #include <iostream>
 
+#define FIELD_WIDTH 750
+#define FIELD_LENGTH 500
+#define BALL_DIAMETER 15
+
 Pong::Pong() {
-    fieldSize = {750, 500};
+    fieldSize = {FIELD_WIDTH, FIELD_LENGTH};
 
     paddleSize = fieldSize.second / 6;
 
     ballPos = {fieldSize.first / 2, fieldSize.second / 2};
-    ballDiameter = 15;
+    ballDiameter = BALL_DIAMETER;
 
     ballSpeedMultiplier = 5e-7;
     ballSpeed = {1, 1};
@@ -24,10 +28,11 @@ Pong::Pong() {
 
     directionP1 = directionP2 = 0;
 
-    paddlespeed = 5e-7;
+    paddleSpeed = 5e-7;
 
     lastTickRight = lastTickLeft = lastTickBall = std::chrono::high_resolution_clock::now();
 
+    leftPressed = rightPressed = false;
 }
 
 Pong::~Pong() = default;
@@ -106,7 +111,6 @@ void Pong::downReleasedPlayer2() {
                                                                                                   timePoint);
     eventQueueP2.push(new_elem);
     lockQ2.unlock();
-    char **a;
 }
 
 void Pong::tick() {
@@ -122,12 +126,12 @@ void Pong::tick() {
     newBallPos = ballPos.first + ballSpeed.first * duration;
     if (newBallPos - ballDiameter / 2. < 0) {
         // position during overlap
-
         if (ballPos.second > positionP1 && ballPos.second < positionP1 + paddleSize) {
             newBallPos = (newBallPos - ballDiameter / 2.) * -1 + ballDiameter / 2.;
             ballSpeed.first *= -1;
         } else {
-            ballPos = {fieldSize.first / 2, fieldSize.second / 2};
+            score(false);
+            ballPos = {fieldSize.first * .7, fieldSize.second / 2};
             return;
         }
     } else if (newBallPos + ballDiameter / 2. > fieldSize.first) {
@@ -136,7 +140,8 @@ void Pong::tick() {
             newBallPos -= 2 * (newBallPos + ballDiameter / 2. - fieldSize.first);
             ballSpeed.first *= -1;
         } else {
-            ballPos = {fieldSize.first / 2, fieldSize.second / 2};
+            score(true);
+            ballPos = {fieldSize.first * .3, fieldSize.second / 2};
             return;
         }
     }
@@ -156,6 +161,13 @@ void Pong::tick() {
     lastTickBall = now;
 }
 
+void Pong::loop() {
+    while (!terminated) {
+        tick();
+        usleep(1000);
+    }
+}
+
 void
 Pong::emptyQueue(std::queue<std::pair<event, std::chrono::time_point<std::chrono::high_resolution_clock>>> &eventQueue,
                  std::mutex &lock,
@@ -166,7 +178,7 @@ Pong::emptyQueue(std::queue<std::pair<event, std::chrono::time_point<std::chrono
     while (!eventQueue.empty()) {
         auto currentTick = std::chrono::high_resolution_clock::now();
         auto timeDistance = currentTick - lastTick;
-        position -= paddlespeed * timeDistance.count() * direction;
+        position -= paddleSpeed * timeDistance.count() * direction;
         switch (eventQueue.front().first) {
             case upPressed:
                 direction = 1;
@@ -187,13 +199,17 @@ Pong::emptyQueue(std::queue<std::pair<event, std::chrono::time_point<std::chrono
         updated = true;
     }
 
-    if (!updated){
+    if (!updated) {
         auto currentTick = std::chrono::high_resolution_clock::now();
         auto timeDistance = currentTick - lastTick;
-        position -= paddlespeed * timeDistance.count() * direction;
+        position -= paddleSpeed * timeDistance.count() * direction;
         position = std::max(position, 0.);
         position = std::min(position, fieldSize.second - paddleSize + .0);
         lastTick = currentTick;
     }
     lock.unlock();
+}
+
+void Pong::score(bool left) {
+    left ? std::cout << "LEFT SCORED!\n" : std::cout << "RIGHT SCORED!\n";
 }
