@@ -16,7 +16,9 @@ int main(int argc, const char *argv[]) {
 
     Window window(game);
 
+    socketWindow.stop();
     game->terminate();
+    sendThread.join();
     gameThread.join();
     return 0;
 }

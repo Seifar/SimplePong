@@ -32,7 +32,7 @@ public:
 
     ~TestServer();
 
-    // non-blocking; will exit server soon
+    // non-blocking; server will exit soon
     void terminate();
 };
 

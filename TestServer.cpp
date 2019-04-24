@@ -120,6 +120,7 @@ void TestServer::terminate() {
 
 TestServer::~TestServer() {
     terminate();
+    close(*serverSocket);
     internalThread.join();
 }
 

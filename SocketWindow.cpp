@@ -10,7 +10,8 @@
 
 SocketWindow::SocketWindow(Pong *modell) {
     this->modell = modell;
-    connectTo(IP, CLIENT_PORT);
+    if (connectTo(IP, CLIENT_PORT) != 0)
+        shouldStop = true;
 }
 
 
@@ -79,7 +80,6 @@ std::string SocketWindow::createStateMsg() {
 
 SocketWindow::~SocketWindow() {
     stop();
-    sleep(1);
     close(fd);
 }
 
