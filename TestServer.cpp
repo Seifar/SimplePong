@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include <sys/filio.h>
+#include <poll.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
@@ -16,7 +16,7 @@ TestServer::TestServer() {
     connections.resize(1);
     connections[0].fd = socket(AF_INET, SOCK_STREAM, 0);
     serverSocket = &connections[0].fd;
-    connections[0].events = POLLIN;
+    connections[0].events = POLL_IN;
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
@@ -58,7 +58,7 @@ void TestServer::run() {
         }
 
         //check for new connection requests
-        if (connections[0].revents != POLLIN) {
+        if (connections[0].revents != POLL_IN) {
             std::cout << "Error: revents = " << connections[0].revents << std::endl;
             shouldExit = true;
             break;
