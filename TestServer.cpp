@@ -7,6 +7,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+
 #include "TestServer.h"
 #include "SocketWindow.h"
 
@@ -15,8 +16,9 @@ TestServer::TestServer() {
 
     connections.resize(1);
     connections[0].fd = socket(AF_INET, SOCK_STREAM, 0);
-    serverSocket = &connections[0].fd;
-    connections[0].events = POLL_IN;
+    serverSocket = new int;
+    *serverSocket = connections[0].fd;
+    connections[0].events = POLLIN;
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
@@ -39,6 +41,10 @@ TestServer::TestServer() {
         std::cout << "Binding socket failed!" << std::endl;
         exit(EXIT_FAILURE);
     }
+    
+    if (listen(*serverSocket, 32)){
+        exit(EXIT_FAILURE);
+    }
 
     internalThread = std::thread(&TestServer::run, this);
 }
@@ -58,11 +64,12 @@ void TestServer::run() {
         }
 
         //check for new connection requests
-        if (connections[0].revents != POLL_IN) {
+        if (connections[0].revents != POLLIN && connections[0].revents != 0) {
             std::cout << "Error: revents = " << connections[0].revents << std::endl;
             shouldExit = true;
             break;
         }
+        
         while (true) {
             int new_sd = accept(*serverSocket, NULL, NULL);
             if (new_sd < 0) {
@@ -75,7 +82,7 @@ void TestServer::run() {
             }
             struct pollfd newConnection;
             newConnection.fd = new_sd;
-            newConnection.events = POLL_IN;
+            newConnection.events = POLLIN;
             connections.emplace_back(newConnection);
         }
 

@@ -10,15 +10,21 @@
 
 SocketWindow::SocketWindow(Pong *modell) {
     this->modell = modell;
-    if (connectTo(IP, CLIENT_PORT) != 0)
-        shouldStop = true;
 }
 
 
 void SocketWindow::sendLoop() {
+    if (connectTo(IP, CLIENT_PORT) != 0){
+        shouldStop = true;
+        std::cout << "Not starting send loop." << std::endl;
+    }
+
+    
     while (!shouldStop) {
         std::string msg = createStateMsg();
+        std::cout << msg << std::endl;
         send(fd, msg.c_str(), msg.length(), 0);
+        sleep(1);
         usleep(SLEEP_TIME_US);
     }
 }
@@ -42,7 +48,7 @@ int SocketWindow::connectTo(std::string ip, int port) {
     fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd < 0) {
         std::cout << "Creating socket failed!";
-        return -1;
+        exit(EXIT_FAILURE);
     }
 
     struct sockaddr_in serv_addr = {0};
@@ -56,8 +62,6 @@ int SocketWindow::connectTo(std::string ip, int port) {
     if (connect(fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
         std::cout << "Connection Failed " << std::endl;
         std::cout << errno << std::endl;
-        if(errno == ECONNREFUSED)
-            std::cout << "FOOOO";
         return -1;
     }
     return 0;
